@@ -119,26 +119,16 @@ public class PacketListenerAPI implements IPacketListener, Listener, API {
 	}
 
 	@Override
-	public Object onPacketReceive(Object sender, Object packet) {
-		PacketEvent<WrappedPacket> receivedPacket;
-		if (sender instanceof Player) {
-			receivedPacket = new PacketEvent<WrappedPacket>((Player) sender, new UnknownWrappedPacket(packet));
-		} else {
-			receivedPacket = new PacketEvent<WrappedPacket>((ChannelWrapper<?>)sender, new UnknownWrappedPacket(packet));
-		}
+	public Object onPacketReceive(Player player, ChannelWrapper<?> channel, Object packet) {
+		PacketEvent<WrappedPacket> receivedPacket = new PacketEvent<WrappedPacket>(player, channel, new UnknownWrappedPacket(packet)); // TODO wrap packet
 		receiveManager.notifyHandlers(receivedPacket);
 		if (receivedPacket.isCancelled()) { return null; }
 		return receivedPacket.getWrappedPacket().getPacket();
 	}
 
 	@Override
-	public Object onPacketSend(Object receiver, Object packet) {
-		PacketEvent<WrappedPacket> sentPacket;
-		if (receiver instanceof Player) {
-			sentPacket =  new PacketEvent<WrappedPacket>((Player) receiver, new UnknownWrappedPacket(packet));
-		} else {
-			sentPacket = new PacketEvent<WrappedPacket>((ChannelWrapper<?>)receiver, new UnknownWrappedPacket(packet));
-		}
+	public Object onPacketSend(Player player, ChannelWrapper<?> channel, Object packet) {
+		PacketEvent<WrappedPacket> sentPacket =  new PacketEvent<WrappedPacket>(player, channel, new UnknownWrappedPacket(packet)); // TODO wrap packet
 		sendManager.notifyHandlers(sentPacket);
 		if (sentPacket.isCancelled()) { return null; }
 		return sentPacket.getWrappedPacket().getPacket();

@@ -21,7 +21,7 @@ public class ChannelInjector {
 		try {
 			Class.forName("net.minecraft.util.io.netty.channel.Channel");
 			channel = newChannelInstance(iPacketListener, "io.codemc.advancedpacketapi.channel.NMUChannel");
-			System.out.println("[PacketListenerAPI] Using NMUChannel");
+			System.out.println("[AdvancedPacketAPI] Using NMUChannel");
 			return true;
 		} catch (Exception e) {
 			exceptions.add(e);
@@ -29,7 +29,7 @@ public class ChannelInjector {
 		try {
 			Class.forName("io.netty.channel.Channel");
 			channel = newChannelInstance(iPacketListener, "io.codemc.advancedpacketapi.channel.INCChannel");
-			System.out.println("[PacketListenerAPI] Using INChannel");
+			System.out.println("[AdvancedPacketAPI] Using INChannel");
 			return true;
 		} catch (Exception e1) {
 			exceptions.add(e1);

@@ -12,14 +12,8 @@ public class PacketEvent<T extends WrappedPacket> implements Cancellable {
 	private T wrappedPacket;
 	private boolean canceled = false;
 	
-	public PacketEvent(Player player, T packet) {
+	public PacketEvent(Player player, ChannelWrapper<?> channel, T packet) {
 		this.player = player;
-		this.channel = null;
-		this.wrappedPacket = packet;
-	}
-	
-	public PacketEvent(ChannelWrapper<?> channel, T packet) {
-		this.player = null;
 		this.channel = channel;
 		this.wrappedPacket = packet;
 	}

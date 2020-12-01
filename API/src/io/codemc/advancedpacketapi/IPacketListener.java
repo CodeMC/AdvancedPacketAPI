@@ -1,10 +1,14 @@
 package io.codemc.advancedpacketapi;
 
+import org.bukkit.entity.Player;
+
+import io.codemc.advancedpacketapi.channel.ChannelWrapper;
+
 public interface IPacketListener {
 
-	Object onPacketSend(Object receiver, Object packet);
+	Object onPacketSend(Player player, ChannelWrapper<?> channel, Object packet);
 
-	Object onPacketReceive(Object sender, Object packet);
+	Object onPacketReceive(Player player, ChannelWrapper<?> channel, Object packet);
 	
 	boolean hasSendHandler(Class<?> packet);
 	

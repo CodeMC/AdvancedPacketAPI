@@ -28,7 +28,7 @@ public class INCChannel extends ChannelAbstract {
 				public void run() {
 					try {
 						System.out.println("Player: " + channel + " " + channel.parent());
-						channel.pipeline().addBefore(KEY_HANDLER, KEY_PLAYER, new ChannelHandler(player));
+						channel.pipeline().addBefore(KEY_HANDLER, KEY_PLAYER, new ChannelHandler(player, new INCChannelWrapper(channel)));
 						if (channel.pipeline().get(KEY_SERVER) != null) { // We switch to the player linked channel
 							channel.pipeline().remove(KEY_SERVER);
 						}
@@ -90,7 +90,7 @@ public class INCChannel extends ChannelAbstract {
 							}
 							if (channel.pipeline().get(KEY_SERVER) == null) {
 								System.out.println("Channel: " + channel + " " + channel.parent());
-								channel.pipeline().addBefore(KEY_HANDLER, KEY_SERVER, new ChannelHandler(new INCChannelWrapper(channel)));
+								channel.pipeline().addBefore(KEY_HANDLER, KEY_SERVER, new ChannelHandler(null, new INCChannelWrapper(channel)));
 							}
 						} catch (Exception e) {
 						}
@@ -126,21 +126,19 @@ public class INCChannel extends ChannelAbstract {
 
 	class ChannelHandler extends ChannelDuplexHandler implements IChannelHandler {
 
-		private Object owner;
+		private final Player player;
+		private final ChannelWrapper<?> channel;
 
-		public ChannelHandler(Player player) {
-			this.owner = player;
-		}
-
-		public ChannelHandler(ChannelWrapper<?> channelWrapper) {
-			this.owner = channelWrapper;
+		public ChannelHandler(Player player, ChannelWrapper<?> channel) {
+			this.player = player;
+			this.channel = channel;
 		}
 
 		@Override
 		public void write(ChannelHandlerContext ctx, Object msg, ChannelPromise promise) throws Exception {
 			Object pckt = msg;
 			if (Packet.isAssignableFrom(msg.getClass()) && hasSendHandler(msg.getClass())) {
-				pckt = onPacketSend(this.owner, msg);
+				pckt = onPacketSend(this.player, this.channel, msg);
 			}
 			if (pckt == null) { return; }
 			super.write(ctx, pckt, promise);
@@ -150,7 +148,7 @@ public class INCChannel extends ChannelAbstract {
 		public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
 			Object pckt = msg;
 			if (Packet.isAssignableFrom(msg.getClass()) && hasReceiveHandler(msg.getClass())) {
-				pckt = onPacketReceive(this.owner, msg);
+				pckt = onPacketReceive(this.player, this.channel, msg);
 			}
 			if (pckt == null) { return; }
 			super.channelRead(ctx, pckt);
@@ -158,7 +156,7 @@ public class INCChannel extends ChannelAbstract {
 
 		@Override
 		public String toString() {
-			return "INCChannel$ChannelHandler@" + hashCode() + " (" + this.owner + ")";
+			return "INCChannel$ChannelHandler@" + hashCode() + " (" + this.player + ", " + this.channel + ")";
 		}
 
 	}

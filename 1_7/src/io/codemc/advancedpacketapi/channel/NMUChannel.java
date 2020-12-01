@@ -6,9 +6,6 @@ import org.bukkit.entity.Player;
 import org.inventivetalent.reflection.minecraft.Minecraft;
 
 import io.codemc.advancedpacketapi.IPacketListener;
-import io.codemc.advancedpacketapi.channel.ChannelAbstract;
-import io.codemc.advancedpacketapi.channel.ChannelWrapper;
-
 import java.lang.reflect.Field;
 import java.net.SocketAddress;
 import java.util.ArrayList;
@@ -29,7 +26,7 @@ public class NMUChannel extends ChannelAbstract {
 				@Override
 				public void run() {
 					try {
-						channel.pipeline().addBefore(KEY_HANDLER, KEY_PLAYER, new ChannelHandler(player));
+						channel.pipeline().addBefore(KEY_HANDLER, KEY_PLAYER, new ChannelHandler(player, new NMUChannelWrapper(channel)));
 						if (channel.pipeline().get(KEY_SERVER) != null) {
 							channel.pipeline().remove(KEY_SERVER);
 						}
@@ -91,7 +88,7 @@ public class NMUChannel extends ChannelAbstract {
 								channel = (net.minecraft.util.io.netty.channel.Channel) channelField.get(a);
 							}
 							if (channel.pipeline().get(KEY_SERVER) == null) {
-								channel.pipeline().addBefore(KEY_HANDLER, KEY_SERVER, new ChannelHandler(new NMUChannelWrapper(channel)));
+								channel.pipeline().addBefore(KEY_HANDLER, KEY_SERVER, new ChannelHandler(null, new NMUChannelWrapper(channel)));
 							}
 						} catch (Exception e) {
 						}
@@ -127,21 +124,19 @@ public class NMUChannel extends ChannelAbstract {
 
 	class ChannelHandler extends net.minecraft.util.io.netty.channel.ChannelDuplexHandler implements IChannelHandler {
 
-		private Object owner;
+		private final Player player;
+		private final ChannelWrapper<?> channel;
 
-		public ChannelHandler(Player player) {
-			this.owner = player;
-		}
-
-		public ChannelHandler(ChannelWrapper<?> channelWrapper) {
-			this.owner = channelWrapper;
+		public ChannelHandler(Player player, ChannelWrapper<?> channel) {
+			this.player = player;
+			this.channel = channel;
 		}
 
 		@Override
 		public void write(ChannelHandlerContext ctx, Object msg, ChannelPromise promise) throws Exception {
 			Object pckt = msg;
 			if (Packet.isAssignableFrom(msg.getClass())) {
-				pckt = onPacketSend(this.owner, msg);
+				pckt = onPacketSend(player, channel, msg);
 			}
 			if (pckt == null) { return; }
 			super.write(ctx, pckt, promise);
@@ -151,7 +146,7 @@ public class NMUChannel extends ChannelAbstract {
 		public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
 			Object pckt = msg;
 			if (Packet.isAssignableFrom(msg.getClass())) {
-				pckt = onPacketReceive(this.owner, msg);
+				pckt = onPacketReceive(player, channel, msg);
 			}
 			if (pckt == null) { return; }
 			super.channelRead(ctx, pckt);
@@ -159,7 +154,7 @@ public class NMUChannel extends ChannelAbstract {
 
 		@Override
 		public String toString() {
-			return "NMUChannel$ChannelHandler@" + hashCode() + " (" + this.owner + ")";
+			return "NMUChannel$ChannelHandler@" + hashCode() + " (" + this.player + ", " + this.channel + ")";
 		}
 	}
 

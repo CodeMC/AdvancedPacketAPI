@@ -81,12 +81,12 @@ public abstract class ChannelAbstract {
 
 	public abstract IListenerList<Object> newListenerList();
 
-	protected final Object onPacketSend(Object receiver, Object packet) {
-		return iPacketListener.onPacketSend(receiver, packet);
+	protected final Object onPacketSend(Player player, ChannelWrapper<?> channel, Object packet) {
+		return iPacketListener.onPacketSend(player, channel, packet);
 	}
 
-	protected final Object onPacketReceive(Object sender, Object packet) {
-		return iPacketListener.onPacketReceive(sender, packet);
+	protected final Object onPacketReceive(Player player, ChannelWrapper<?> channel, Object packet) {
+		return iPacketListener.onPacketReceive(player, channel, packet);
 	}
 	
 	protected boolean hasSendHandler(Class<?> packet) {
