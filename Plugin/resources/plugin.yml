@@ -1,6 +1,6 @@
-name: PacketListenerApi
-main: org.inventivetalent.packetlistener.PacketListenerPlugin
-author: inventivetalent
+name: AdvancedPacketAPI
+main: io.codemc.advancedpacketapi.AdvancedPacketAPIPlugin
+authors: [inventivetalent, tr7zw, sgdc3, CodeMC]
 version: ${project.version}
 
 loadbefore: [ProtocolSupport]

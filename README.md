@@ -1,17 +1,7 @@
-# PacketListenerAPI
+# AdvancedPacketAPI 
 
-[![Build Status](https://travis-ci.org/InventivetalentDev/PacketListenerAPI.svg?branch=master)](https://travis-ci.org/InventivetalentDev/PacketListenerAPI)
-[![GitHub release](https://img.shields.io/github/release/InventivetalentDev/PacketListenerAPI.svg)](https://github.com/InventivetalentDev/PacketListenerAPI/releases/latest)
+#### Yet another Spigot packet manipulation library!
+#### Fork of [PacketListenerAPI](https://github.com/InventivetalentDev/PacketListenerAPI) by [Inventivetalent](https://github.com/InventivetalentDev)
 
-API to modify Minecraft packets
-
-[SpigotMC page](https://r.spiget.org/2930/)
-
-
-### Supported by YourKit
-![](https://www.yourkit.com/images/yklogo.png)  
-YourKit supports open source projects with innovative and intelligent tools
-for monitoring and profiling Java and .NET applications.
-YourKit is the creator of <a href="https://www.yourkit.com/java/profiler/">YourKit Java Profiler</a>,
-<a href="https://www.yourkit.com/.net/profiler/">YourKit .NET Profiler</a>,
-and <a href="https://www.yourkit.com/youmonitor/">YourKit YouMonitor</a>.
+[![Build Status](https://ci.codemc.org/buildStatus/icon?job=CodeMC%2FAdvancedPacketAPI)](https://ci.codemc.org/job/CodeMC/job/AdvancedPacketAPI/)
+[![GitHub release](https://img.shields.io/github/release/CodeMC/AdvancedPacketAPI.svg)](https://github.com/CodeMC/AdvancedPacketAPI/releases/latest)

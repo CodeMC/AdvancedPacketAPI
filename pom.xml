@@ -4,7 +4,7 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>org.inventivetalent.packetlistener</groupId>
+    <groupId>io.codemc.advancedpacketapi</groupId>
     <artifactId>parent</artifactId>
     <packaging>pom</packaging>
     <version>parent</version>
@@ -12,19 +12,17 @@
         <module>API</module>
         <module>1_7</module>
         <module>1_8</module>
-        <!--<module>Comp-API</module>-->
         <module>Plugin</module>
     </modules>
-    <name>PacketListenerAPI</name>
+    <name>AdvancedPacketAPI</name>
 
     <properties>
-        <pl.version>3.7.8-SNAPSHOT</pl.version>
+        <pl.version>1.0.0-SNAPSHOT</pl.version>
     </properties>
 
     <build>
-        <finalName>PacketListenerAPI_v${pl.version}</finalName>
+        <finalName>AdvancedPacketAPI_v${pl.version}</finalName>
         <sourceDirectory>src</sourceDirectory>
-        <!--<outputDirectory>target</outputDirectory>-->
         <resources>
             <resource>
                 <directory>src</directory>
@@ -64,7 +62,7 @@
                             <artifactSet>
                                 <includes>
                                     <include>org.mcstats.*</include>
-                                    <include>org.inventivetalent.packetlistener:**</include>
+                                    <include>io.codemc.advancedpacketapi:**</include>
                                     <include>org.inventivetalent:reflectionhelper**</include>
                                     <include>org.inventivetalent:apimanager**</include>
                                     <include>org.inventivetalent.spiget-update:bukkit**</include>
@@ -73,11 +71,11 @@
                             <relocations>
                                 <relocation>
                                     <pattern>org.mcstats</pattern>
-                                    <shadedPattern>org.inventivetalent.packetlistener.mcstats</shadedPattern>
+                                    <shadedPattern>io.codemc.advancedpacketapi.mcstats</shadedPattern>
                                 </relocation>
                                 <relocation>
                                     <pattern>org.inventivetalent.reflection</pattern>
-                                    <shadedPattern>org.inventivetalent.packetlistener.reflection</shadedPattern>
+                                    <shadedPattern>io.codemc.advancedpacketapi.reflection</shadedPattern>
                                 </relocation>
                             </relocations>
                         </configuration>
@@ -86,46 +84,26 @@
             </plugin>
         </plugins>
     </build>
-    <distributionManagement>
-        <repository>
-            <id>sonatype-nexus-releases</id>
-            <url>https://repo.inventivetalent.org/content/repositories/releases/</url>
-        </repository>
-        <snapshotRepository>
-            <id>sonatype-nexus-snapshots</id>
-            <url>https://repo.inventivetalent.org/content/repositories/snapshots/</url>
-        </snapshotRepository>
-    </distributionManagement>
 
 
     <repositories>
+        <!-- CodeMC Public -->
+        <repository>
+            <id>codemc-repo</id>
+            <url>https://repo.codemc.io/repository/maven-public/</url>
+        </repository>
+        <!-- CodeMC NMS -->
+        <repository>
+            <id>codemc-nms-repo</id>
+            <url>https://repo.codemc.org/repository/nms/</url>
+        </repository>
         <repository>
             <id>inventive-repo</id>
             <url>https://repo.inventivetalent.org/content/groups/public/</url>
         </repository>
         <repository>
-            <id>md_5-repo</id>
-            <url>http://repo.md-5.net/content/repositories/public/</url>
-        </repository>
-        <repository>
-            <id>sonatype</id>
-            <url>https://oss.sonatype.org/content/groups/public/</url>
-        </repository>
-        <repository>
-            <id>spigot-repo</id>
-            <url>https://hub.spigotmc.org/nexus/content/groups/public/</url>
-        </repository>
-        <repository>
             <id>mojang</id>
             <url>https://libraries.minecraft.net/</url>
-        </repository>
-        <repository>
-            <id>techcable-repo</id>
-            <url>http://repo.techcable.net/content/groups/public/</url>
-        </repository>
-        <repository>
-            <id>mikeprimm-repo</id>
-            <url>http://repo.mikeprimm.com/</url>
         </repository>
     </repositories>
 </project>
