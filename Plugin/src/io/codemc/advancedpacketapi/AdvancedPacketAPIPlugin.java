@@ -2,23 +2,19 @@ package io.codemc.advancedpacketapi;
 
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
-import org.inventivetalent.apihelper.APIManager;
-import org.inventivetalent.update.spiget.SpigetUpdate;
-import org.inventivetalent.update.spiget.UpdateCallback;
-import org.inventivetalent.update.spiget.comparator.VersionComparator;
 
-import io.codemc.advancedpacketapi.handler.UnknownWrappedPacket;
-import io.codemc.advancedpacketapi.metrics.Metrics;
+import io.codemc.advancedpacketapi.packets.UnknownWrappedPacket;
 import io.codemc.advancedpacketapi.test.TestHandler;
 
 public class AdvancedPacketAPIPlugin extends JavaPlugin {
 
-	private PacketListenerAPI packetListenerAPI = new PacketListenerAPI();
+	private PacketListenerAPIImpl packetListenerAPI = new PacketListenerAPIImpl();
 
 	@Override
 	public void onLoad() {
 		//Register this API if the plugin gets loaded
-		APIManager.registerAPI(packetListenerAPI, this);
+		packetListenerAPI.onLoad();
+		AdvancedPacketAPI.setupInstance(packetListenerAPI);
 	}
 
 	@Override
@@ -50,15 +46,19 @@ public class AdvancedPacketAPIPlugin extends JavaPlugin {
 		new Metrics(this, 225);*/
 
 		//Initialize this API if the plugin got enabled
-		APIManager.initAPI(PacketListenerAPI.class);
-		packetListenerAPI.addReceiveHandler(UnknownWrappedPacket.class, new TestHandler(this, "in"));
-		packetListenerAPI.addSendHandler(UnknownWrappedPacket.class, new TestHandler(this, "out"));
+		packetListenerAPI.onEnable(this);
+		AdvancedPacketAPI.getAPI().addReceiveHandler(UnknownWrappedPacket.class, new TestHandler(this, "in"));
+		AdvancedPacketAPI.getAPI().addSendHandler(UnknownWrappedPacket.class, new TestHandler(this, "out"));
 	}
 
 	@Override
 	public void onDisable() {
 		//Disable this API if the plugin was enabled
-		APIManager.disableAPI(PacketListenerAPI.class);
+		packetListenerAPI.onDisable();
+	}
+	
+	public AdvancedPacketAPI getAPI() {
+		return packetListenerAPI;
 	}
 
 }

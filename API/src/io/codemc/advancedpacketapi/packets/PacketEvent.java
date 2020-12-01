@@ -1,4 +1,4 @@
-package io.codemc.advancedpacketapi.handler;
+package io.codemc.advancedpacketapi.packets;
 
 import org.bukkit.entity.Player;
 import org.bukkit.event.Cancellable;

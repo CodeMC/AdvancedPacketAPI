@@ -1,14 +1,14 @@
-package io.codemc.advancedpacketapi.handler;
+package io.codemc.advancedpacketapi.packets;
 
 import java.util.Objects;
 
 import org.bukkit.plugin.Plugin;
 
-public abstract class AbstractPacketHandler<T extends WrappedPacket> {
+public abstract class PacketHandler<T extends WrappedPacket> {
 
 	private final Plugin plugin;
 	
-	public AbstractPacketHandler(Plugin plugin) {
+	public PacketHandler(Plugin plugin) {
 		Objects.requireNonNull(plugin);
 		this.plugin = plugin;
 	}

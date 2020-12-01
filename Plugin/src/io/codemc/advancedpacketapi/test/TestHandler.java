@@ -2,11 +2,11 @@ package io.codemc.advancedpacketapi.test;
 
 import org.bukkit.plugin.Plugin;
 
-import io.codemc.advancedpacketapi.handler.AbstractPacketHandler;
-import io.codemc.advancedpacketapi.handler.PacketEvent;
-import io.codemc.advancedpacketapi.handler.UnknownWrappedPacket;
+import io.codemc.advancedpacketapi.packets.PacketEvent;
+import io.codemc.advancedpacketapi.packets.PacketHandler;
+import io.codemc.advancedpacketapi.packets.UnknownWrappedPacket;
 
-public class TestHandler extends AbstractPacketHandler<UnknownWrappedPacket>{
+public class TestHandler extends PacketHandler<UnknownWrappedPacket>{
 
 	private String dir;
 	

@@ -1,4 +1,4 @@
-package io.codemc.advancedpacketapi.handler;
+package io.codemc.advancedpacketapi.packets;
 
 import org.inventivetalent.reflection.resolver.FieldResolver;
 

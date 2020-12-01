@@ -9,17 +9,14 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.plugin.Plugin;
-import org.inventivetalent.apihelper.API;
-import org.inventivetalent.apihelper.APIManager;
-
 import io.codemc.advancedpacketapi.channel.ChannelWrapper;
-import io.codemc.advancedpacketapi.handler.AbstractPacketHandler;
 import io.codemc.advancedpacketapi.handler.HandlerManager;
-import io.codemc.advancedpacketapi.handler.PacketEvent;
-import io.codemc.advancedpacketapi.handler.UnknownWrappedPacket;
-import io.codemc.advancedpacketapi.handler.WrappedPacket;
+import io.codemc.advancedpacketapi.packets.PacketEvent;
+import io.codemc.advancedpacketapi.packets.PacketHandler;
+import io.codemc.advancedpacketapi.packets.UnknownWrappedPacket;
+import io.codemc.advancedpacketapi.packets.WrappedPacket;
 
-public class PacketListenerAPI implements IPacketListener, Listener, API {
+public class PacketListenerAPIImpl extends AdvancedPacketAPI implements IPacketListener, Listener {
 
 	private ChannelInjector channelInjector;
 	protected boolean injected = false;
@@ -28,9 +25,8 @@ public class PacketListenerAPI implements IPacketListener, Listener, API {
 
 	Logger logger = Logger.getLogger("PacketListenerAPI");
 
-	//This gets called either by #registerAPI above, or by the API manager if another plugin requires this API
-	@Override
-	public void load() {
+	public void onLoad() {
+		if(injected)return;
 		channelInjector = new ChannelInjector();
 		if (injected = channelInjector.inject(this)) {
 			channelInjector.addServerChannel();
@@ -41,13 +37,14 @@ public class PacketListenerAPI implements IPacketListener, Listener, API {
 
 	}
 
-	//This gets called either by #initAPI above or #initAPI in one of the requiring plugins
-	@Override
-	public void init(Plugin plugin) {
+	public void onEnable(Plugin plugin) {
+		if (!injected) {
+			return;//Not enabled
+		}
 		sendManager = new HandlerManager();
 		receiveManager = new HandlerManager();
 		//Register our events
-		APIManager.registerEvents(this, this);
+		Bukkit.getPluginManager().registerEvents(this, plugin);
 
 		logger.info("Adding channels for online players...");
 		for (Player player : Bukkit.getOnlinePlayers()) {
@@ -56,8 +53,7 @@ public class PacketListenerAPI implements IPacketListener, Listener, API {
 	}
 
 	//This gets called either by #disableAPI above or #disableAPI in one of the requiring plugins
-	@Override
-	public void disable(Plugin plugin) {
+	public void onDisable() {
 		if (!injected) {
 			return;//Not enabled
 		}
@@ -75,7 +71,8 @@ public class PacketListenerAPI implements IPacketListener, Listener, API {
 	 * @return <code>true</code> if the handler was added
 	 * @see PacketSendHandler#addHandler(PacketSendHandler)
 	 */
-	public <T extends WrappedPacket> boolean addSendHandler(Class<T> wrapperClass, AbstractPacketHandler<T> handler) {
+	@Override
+	public <T extends WrappedPacket> boolean addSendHandler(Class<T> wrapperClass, PacketHandler<T> handler) {
 		return sendManager.addHandler(wrapperClass, handler);
 	}
 	
@@ -84,7 +81,8 @@ public class PacketListenerAPI implements IPacketListener, Listener, API {
 	 * @return <code>true</code> if the handler was added
 	 * @see PacketReceiveHandler#addHandler(PacketReceiveHandler)
 	 */
-	public <T extends WrappedPacket> boolean addReceiveHandler(Class<T> wrapperClass, AbstractPacketHandler<T> handler) {
+	@Override
+	public <T extends WrappedPacket> boolean addReceiveHandler(Class<T> wrapperClass, PacketHandler<T> handler) {
 		return receiveManager.addHandler(wrapperClass, handler);
 	}
 
@@ -93,20 +91,26 @@ public class PacketListenerAPI implements IPacketListener, Listener, API {
 	 * @return <code>true</code> if the handler was removed
 	 * @see PacketSendHandler#removeHandler(PacketSendHandler)
 	 */
-	//TODO
-	//public static boolean removePacketHandler(PacketSendHandler handler) {
-	//	return PacketSendHandler.removeHandler(handler);
-	//}
+	@Override
+	public boolean removeSendHandler(PacketHandler<?> handler) {
+		return sendManager.removeHandler(handler);
+	}
 	
 	/**
 	 * @param handler PacketReceiveHandler to remove
 	 * @return <code>true</code> if the handler was removed
 	 * @see PacketReceiveHandler#removeHandler(PacketReceiveHandler)
 	 */
-	//TODO
-	//public static boolean removePacketHandler(PacketReceiveHandler handler) {
-	//	return PacketReceiveHandler.removeHandler(handler);
-	//}
+	@Override
+	public boolean removeReceiveHandler(PacketHandler<?> handler) {
+		return receiveManager.removeHandler(handler);
+	}
+	
+	@Override
+	public void removePluginHandlers(Plugin plugin) {
+		sendManager.removeHandlers(plugin);
+		receiveManager.removeHandlers(plugin);
+	}
 
 	@EventHandler
 	public void onJoin(PlayerJoinEvent e) {
