@@ -11,6 +11,7 @@ import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.plugin.Plugin;
 import io.codemc.advancedpacketapi.channel.ChannelWrapper;
 import io.codemc.advancedpacketapi.handler.HandlerManager;
+import io.codemc.advancedpacketapi.nms.NMSHandler;
 import io.codemc.advancedpacketapi.packets.PacketEvent;
 import io.codemc.advancedpacketapi.packets.PacketHandler;
 import io.codemc.advancedpacketapi.packets.UnknownWrappedPacket;
@@ -22,6 +23,7 @@ public class PacketListenerAPIImpl extends AdvancedPacketAPI implements IPacketL
 	protected boolean injected = false;
 	private HandlerManager sendManager;
 	private HandlerManager receiveManager;
+	private NMSHandler nmsHandler;
 
 	Logger logger = Logger.getLogger("PacketListenerAPI");
 
@@ -64,6 +66,10 @@ public class PacketListenerAPIImpl extends AdvancedPacketAPI implements IPacketL
 
 		sendManager = new HandlerManager();
 		receiveManager = new HandlerManager();
+	}
+	
+	public void setupNMS(NMSHandler handler) {
+		this.nmsHandler = handler;
 	}
 
 	/**
@@ -149,4 +155,11 @@ public class PacketListenerAPIImpl extends AdvancedPacketAPI implements IPacketL
 		// TODO map nms class to wrapper class and keep track of what gets listened to
 		return true;
 	}
+
+	@Override
+	public NMSHandler getNMS() {
+		return nmsHandler;
+	}
+
+
 }

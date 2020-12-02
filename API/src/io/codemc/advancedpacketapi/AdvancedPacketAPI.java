@@ -2,6 +2,7 @@ package io.codemc.advancedpacketapi;
 
 import org.bukkit.plugin.Plugin;
 
+import io.codemc.advancedpacketapi.nms.NMSHandler;
 import io.codemc.advancedpacketapi.packets.PacketHandler;
 import io.codemc.advancedpacketapi.packets.WrappedPacket;
 
@@ -46,5 +47,7 @@ public abstract class AdvancedPacketAPI {
 	public abstract boolean removeReceiveHandler(PacketHandler<?> handler);
 
 	public abstract void removePluginHandlers(Plugin plugin);
+	
+	public abstract NMSHandler getNMS();
 
 }

@@ -12,6 +12,7 @@
         <module>API</module>
         <module>1_7</module>
         <module>1_8</module>
+        <module>NMS16R3</module>
         <module>Plugin</module>
     </modules>
     <name>AdvancedPacketAPI</name>

@@ -4,14 +4,15 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <parent>
-        <groupId>io.codemc.advancedpacketapi</groupId>
         <artifactId>parent</artifactId>
+        <groupId>io.codemc.advancedpacketapi</groupId>
         <version>parent</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>plugin</artifactId>
+    <artifactId>NMS16R3</artifactId>
     <version>${pl.version}</version>
+
 
     <dependencies>
         <dependency>
@@ -19,22 +20,13 @@
             <artifactId>api</artifactId>
             <version>${pl.version}</version>
         </dependency>
+
         <dependency>
-            <groupId>io.codemc.advancedpacketapi</groupId>
-            <artifactId>1_7</artifactId>
-            <version>${pl.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>io.codemc.advancedpacketapi</groupId>
-            <artifactId>1_8</artifactId>
-            <version>${pl.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>io.codemc.advancedpacketapi</groupId>
-            <artifactId>NMS16R3</artifactId>
-            <version>${pl.version}</version>
+            <groupId>org.spigotmc</groupId>
+            <artifactId>spigot</artifactId>
+            <version>1.16.4-R0.1-SNAPSHOT</version>
+            <scope>provided</scope>
         </dependency>
     </dependencies>
-
 
 </project>

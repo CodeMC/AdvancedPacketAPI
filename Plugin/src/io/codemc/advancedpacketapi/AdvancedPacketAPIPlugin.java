@@ -1,8 +1,13 @@
 package io.codemc.advancedpacketapi;
 
+import java.util.UUID;
+
 import org.bukkit.Bukkit;
+import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import io.codemc.advancedpacketapi.nms.play.out.WrappedChatPacket;
+import io.codemc.advancedpacketapi.nms.play.out.WrappedChatPacket.ChatMessageType;
 import io.codemc.advancedpacketapi.packets.UnknownWrappedPacket;
 import io.codemc.advancedpacketapi.test.TestHandler;
 
@@ -15,6 +20,7 @@ public class AdvancedPacketAPIPlugin extends JavaPlugin {
 		//Register this API if the plugin gets loaded
 		packetListenerAPI.onLoad();
 		AdvancedPacketAPI.setupInstance(packetListenerAPI);
+		packetListenerAPI.setupNMS(new io.codemc.advancedpacketapi.nms.nms16R3.NMSHandlerImpl());
 	}
 
 	@Override
@@ -47,8 +53,20 @@ public class AdvancedPacketAPIPlugin extends JavaPlugin {
 
 		//Initialize this API if the plugin got enabled
 		packetListenerAPI.onEnable(this);
-		AdvancedPacketAPI.getAPI().addReceiveHandler(UnknownWrappedPacket.class, new TestHandler(this, "in"));
-		AdvancedPacketAPI.getAPI().addSendHandler(UnknownWrappedPacket.class, new TestHandler(this, "out"));
+		//AdvancedPacketAPI.getAPI().addReceiveHandler(UnknownWrappedPacket.class, new TestHandler(this, "in"));
+		//AdvancedPacketAPI.getAPI().addSendHandler(UnknownWrappedPacket.class, new TestHandler(this, "out"));
+		Bukkit.getScheduler().runTaskTimer(this, () -> {
+			int counter = 0;
+			for(Player p : Bukkit.getOnlinePlayers()) {
+				long start = System.currentTimeMillis();
+				while(System.currentTimeMillis() - start < 50) {
+					WrappedChatPacket packet = packetListenerAPI.getNMS().createChatPacket("test", ChatMessageType.CHAT, UUID.randomUUID());
+					packetListenerAPI.getNMS().sendPacket(p, packet);
+					counter++;
+				}
+			}
+			System.out.println("In 50ms: " + counter);
+		}, 1, 1);
 	}
 
 	@Override
